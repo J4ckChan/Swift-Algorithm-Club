@@ -1,3 +1,4 @@
+import Foundation
 func QuickSort<T:Comparable>(_ array: [T]) -> [T]{
 	guard array.count > 1 else { return array }
 	
@@ -13,6 +14,7 @@ func QuickSort<T:Comparable>(_ array: [T]) -> [T]{
 let list = [ 10, 0, 3, 9, 2, 14, 8, 27, 1, 5, 8, -1, 26 ]
 let res = QuickSort(list)
 print(res)
+
 
 //Lomuto's partitioning scheme
 func partitionLomuto<T:Comparable>(_ array:inout [T], low:Int, high:Int) -> Int{
@@ -44,3 +46,43 @@ func quickSortLomuto<T:Comparable>(_ array:inout [T], _ low:Int, _ high:Int){
 
 quickSortLomuto(&list1, 0, list1.count-1)
 print(list1)
+
+
+
+//Hoare's partitioning scheme
+func partitionHoare<T:Comparable>(_ array:inout [T], _ low:Int, _ high:Int) -> Int{
+	let pivot = array[low]
+	var i = low-1
+	var j = high+1
+	
+	while true {
+		repeat { i += 1 } while array[i] < pivot
+		repeat { j -= 1 } while array[j] > pivot
+		
+		if j > i { 
+			array.swapAt(i, j) 
+		}else{ 
+			return j
+		}
+	}
+}
+
+func quickSortHoare<T:Comparable>(_ array:inout [T], _ low:Int, _ high:Int){
+	guard high > low else { return }
+	
+	let pivotIndex = partitionHoare(&array, low, high)
+	quickSortHoare(&array, low, pivotIndex)
+	quickSortHoare(&array, pivotIndex+1, high)
+}
+
+var list2 = [ 8, 0, 3, 9, 2, 14, 10, 27, 1, 5, 8, -1, 26 ]
+quickSortHoare(&list2, 0, list2.count-1)
+print(list2)
+
+var list3 = [Int]()
+for _ in 0...99 {
+	list3.append(Int(arc4random()%100))
+}
+print(list3)
+quickSortHoare(&list3, 0, list3.count-1)
+print(list3)
